@@ -7,3 +7,5 @@ this sets up:
 - linux lnms server (partially, full setup would be considerably larger)
 - linux prometheus server (basics, including a docker role first)
 - windows with a few basic apps you might want via chocolatey
+
+no secrets are needed or used in this specific setup, but in scenarios where that is required you could easily configure ansible vault to store your secrets securely and reference them as variables in the ansible roles and playbooks, or in various templates, as needed
