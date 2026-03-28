@@ -1,0 +1,9 @@
+- name: Install choco apps
+  win_chocolatey:
+    name:
+      - chocolatey
+      - curl
+      - python3
+      - wireshark
+      - notepadplusplus
+    state: latest

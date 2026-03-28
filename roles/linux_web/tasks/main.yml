@@ -1,0 +1,25 @@
+- name: Install nginx
+  ansible.builtin.package:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Copy demo index page
+  ansible.builtin.copy:
+    src: index.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Allow port 80
+  community.general.ufw:
+    rule: allow
+    port: 80
+    proto: tcp
+
+- name: Ensure nginx is enabled and started
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+    enabled: true

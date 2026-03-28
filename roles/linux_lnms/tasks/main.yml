@@ -1,0 +1,113 @@
+- name: Install prerequisite package
+  ansible.builtin.apt:
+    name: software-properties-common
+    state: present
+    update_cache: true
+
+- name: Add PHP PPA
+  ansible.builtin.apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+    update_cache: true
+
+- name: Install LibreNMS packages
+  ansible.builtin.apt:
+    name:
+      - acl
+      - curl
+      - fping
+      - git
+      - mariadb-client
+      - mariadb-server
+      - mtr-tiny
+      - nginx-full
+      - nmap
+      - php8.3-cli
+      - php8.3-curl
+      - php8.3-fpm
+      - php8.3-gd
+      - php8.3-gmp
+      - php8.3-mbstring
+      - php8.3-mysql
+      - php8.3-snmp
+      - php8.3-xml
+      - php8.3-zip
+      - python3-dotenv
+      - python3-pip
+      - python3-psutil
+      - python3-pymysql
+      - python3-redis
+      - python3-setuptools
+      - python3-systemd
+      - rrdtool
+      - snmp
+      - snmpd
+      - traceroute
+      - unzip
+      - whois
+    state: present
+    update_cache: true
+
+- name: Ensure librenms group exists
+  ansible.builtin.group:
+    name: librenms
+    state: present
+    system: true
+
+- name: Ensure librenms user exists
+  ansible.builtin.user:
+    name: librenms
+    group: librenms
+    home: /opt/librenms
+    create_home: false
+    system: true
+    shell: /bin/bash
+    state: present
+
+- name: Clone repo
+  ansible.builtin.git:
+    repo: https://github.com/librenms/librenms.git
+    dest: /opt/librenms
+    version: master
+    update: false
+
+- name: Ensure /opt/librenms exists
+  ansible.builtin.file:
+    path: /opt/librenms
+    state: directory
+    owner: librenms
+    group: librenms
+    mode: "0771"
+
+- name: Ensure directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: librenms
+    group: librenms
+    mode: "0775"
+  loop:
+    - /opt/librenms/rrd
+    - /opt/librenms/logs
+    - /opt/librenms/bootstrap/cache
+    - /opt/librenms/storage
+
+- name: Ensure nginx is enabled and started
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Ensure mariadb is enabled and started
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+
+- name: Ensure php8.3-fpm is enabled and started
+  ansible.builtin.service:
+    name: php8.3-fpm
+    state: started
+    enabled: true
+
+# ETC. Demo so full installation not completed.

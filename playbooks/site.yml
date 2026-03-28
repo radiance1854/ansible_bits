@@ -1,0 +1,23 @@
+- name: Linux web servers
+  hosts: linux_web
+  become: true
+  roles:
+    - linux_web
+
+- name: Linux Prometheus servers
+  hosts: linux_prom
+  become: true
+  roles:
+    - linux_docker
+    - linux_prom
+
+- name: Linux LibreNMS servers
+  hosts: linux_lnms
+  become: true
+  roles:
+    - linux_lnms
+
+- name: Windows web servers
+  hosts: windows_basic
+  roles:
+    - windows_basic
